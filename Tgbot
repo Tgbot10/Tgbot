@@ -1,0 +1,28 @@
+```
+from flask import Flask, request
+import telegram
+
+app = Flask(__name__)
+bot = telegram.Bot(token='YOUR_BOT_TOKEN')
+
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    update = telegram.Update.de_json(request.get_json(force=True), bot)
+    if update.message.text == '/start':
+        bot.send_message(chat_id=update.message.chat_id, text='Welcome to Anonymous Chat!')
+        bot.send_message(chat_id=update.message.chat_id, text='Purchase Premium to find your preferred partner and enjoy exclusive features!')
+        bot.send_message(chat_id=update.message.chat_id, text='Age: 18+ only')
+        bot.send_message(chat_id=update.message.chat_id, text='Click here to purchase Premium: <link>')
+    elif update.message.text == '/purchase_premium':
+        bot.send_message(chat_id=update.message.chat_id, text='Please pay ₹99 using UPI: <your_upi_id>')
+        bot.send_message(chat_id=update.message.chat_id, text='Once paid, click /verify_payment to access Premium features')
+    elif update.message.text == '/verify_payment':
+        # Verify payment using UPI payment API
+        # If payment is successful, provide Premium access
+        bot.send_message(chat_id=update.message.chat_id, text='Premium access granted! Enjoy exclusive features')
+        bot.send_message(chat_id=update.message.chat_id, text='Find your preferred partner: <link_to_partner_search_tab>')
+    return 'OK'
+
+if __name__ == '__main__':
+    app.run()
+```
